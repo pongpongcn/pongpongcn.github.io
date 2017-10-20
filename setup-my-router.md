@@ -33,6 +33,18 @@ echo 'conf-dir=/etc/dnsmasq.d' >> /etc/dnsmasq.conf
 /etc/init.d/dnsmasq restart
 ```
 
+To speed up some websites, add custom entries to `/etc/dnsmasq.d/customlist.conf`.
+
+Sample:
+```
+server=/adobe.com/127.0.0.1#5353
+ipset=/adobe.com/gfwlist
+server=/icloud.com/127.0.0.1#5353
+ipset=/icloud.com/gfwlist
+server=/speedtest.net/127.0.0.1#5353
+ipset=/speedtest.net/gfwlist
+```
+
 Init gfwlist when start, add following lines to /etc/rc.local
 ```
 ipset -L gfwlist >/dev/null 2>&1
