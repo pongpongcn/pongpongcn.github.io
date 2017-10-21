@@ -1,0 +1,50 @@
+
+# debian 9
+
+FROM debian:stretch
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    ca-certificates git curl
+
+# mbed TLS
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    build-essential
+
+RUN curl -O https://tls.mbed.org/download/mbedtls-2.6.0-gpl.tgz && \
+    tar -xzvf mbedtls-2.6.0-gpl.tgz && \
+    cd mbedtls-2.6.0 && \
+    make && \
+    make install
+
+
+# shadowsocks-libev
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    gettext build-essential autoconf libtool libpcre3-dev asciidoc xmlto libev-dev libc-ares-dev automake libmbedtls-dev libsodium-dev
+
+RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git && \
+    cd shadowsocks-libev && \
+    git submodule update --init --recursive && \
+    ./autogen.sh && \
+    ./configure && \
+    make && \
+    make install
+
+# simple-obfs
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    build-essential autoconf libtool libssl-dev libpcre3-dev libc-ares-dev libev-dev asciidoc xmlto automake
+
+RUN git clone https://github.com/shadowsocks/simple-obfs.git && \
+    cd simple-obfs && \
+    git submodule update --init --recursive && \
+    ./autogen.sh && \
+    ./configure && \
+    make && \
+    make install
+
+# kcptun
+
+RUN cp server_linux_amd64 /usr/local/bin/kcptun-server && \
+	cp client_linux_amd64 /usr/local/bin/kcptun-client
