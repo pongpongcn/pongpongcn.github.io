@@ -91,9 +91,6 @@ Configuration
 }
 ```
 
-Read more
-* https://github.com/xtaci/kcptun/issues/137
-
 
 ### [mbed TLS](https://tls.mbed.org/)
 
@@ -108,6 +105,13 @@ make install
 cd ..
 ```
 
+Tips
+```
+"server":["[::]", "0.0.0.0"]
+https://wiki.archlinux.org/index.php/Haveged_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
+https://www.digitalocean.com/community/tutorials/how-to-setup-additional-entropy-for-cloud-servers-using-haveged
+https://github.com/xtaci/kcptun/issues/137
+```
 
 SSH
 ```
@@ -118,6 +122,45 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAv0P5EyPdhw8dkf3RimOLd3MLiCY8/DfNn/EKEmcuZuZG
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCvkvgy6t9APcwHDDk/E1fqBI3z+O9B0aAunadr2gmLB/FQUOMfoE5cL594Km44tl4TrLEv+QkqOARq/bv+IvfuFA3pyP5LZDiuOYrPITsFdHtfk3yavEKGbJmN2bDhSmIojP/zm0ORtFfoD2ZmcWH81w7O8ku/lg36JweJrC/B3GGBYsMlQvo3ai+Bh3faaBqmIsxHNSrzb/wcZ7SMQsrkEhbZidTFwWlqVAm1MWWvK0lVKUnsoCHCBTR7qngtFYGkKFehIiBWQhRStrxRktVp/GYuTKtP0iZXdmc12cbzQwItWzF5PXfCpm9LGIjxz/BPIFiht+F/kmbtUCzY4uYFUcyZikOkzLTLgUnFdEFE3/h799wr7Cvl4iieqFghW7KF4YiMOsnd35JINc3v6m/d2QCIkS34yGe/7dsBNT88VWXNsDGVsUp07z6sRGPBcNel6ENGeAKnhHyFhenw/C/jT4Dlk24ocpCvdSeWHGNtIff8BPWXAqvOIrAFj/9FL9BMSv1WISF5h+G3qSoRmZHPpnUF5rrPOf5kiasay/TPP0MFWTXaFXCXVHW0lsJY939fGZYHeNrE/hHgU6UBNpBeEU5HS43wWcf73stcX1RVTnpbW6oDh//R7nituVzkDxK9rDLGDKhziBflY4iyqE4Ybx9/PY64vSqtZkZPvDjnHQ== Pocketpc@iPhone6
 ```
 
+/etc/systemd/system/shadowsocks-libev-{port}.service
+```
+[Unit]
+Description=Shadowsocks-libev {port} Server Service
+
+[Service]
+User=nobody
+ExecStart=/usr/bin/ss-server -c /etc/shadowsocks-libev/config-{port}.json -u
+Restart=always
+LimitNOFILE=51200
+
+[Install]
+WantedBy=multi-user.target
+```
+
+client
+```
+config servers
+option fast_open '0'
+option server '67.216.204.120'
+option server_port '443'
+option timeout '60'
+option password 's6yI@!cMhR6c0vCq6T*8CvS048N*cx%tqnyZv^Fw4x6%0CjfrIKMiF5uX'
+option encrypt_method 'chacha20-ietf-poly1305'
+option plugin 'obfs-local'
+option plugin_opts 'obfs=tls;obfs-host=www.amazon.com'
+option alias 'USA bandwagon 443'
+
+config servers
+option alias 'USA bandwagon 80'
+option fast_open '0'
+option server '67.216.204.120'
+option server_port '80'
+option timeout '60'
+option password 'Wu$qXm$CvgMAIp8#7JjCN4F4gfhr6d2Vx5*cvB872UnE233G#L64hNw%0IrUY'
+option encrypt_method 'chacha20-ietf-poly1305'
+option plugin 'obfs-local'
+option plugin_opts 'obfs=http;obfs-host=www.amazon.com'
+```
 
 
 
