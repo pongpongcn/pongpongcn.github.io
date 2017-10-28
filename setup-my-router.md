@@ -18,6 +18,7 @@ opkg install shadowsocks-libev
 opkg install luci-app-shadowsocks
 opkg install ip
 opkg install iptables-mod-tproxy
+opkg install simple-obfs
 ```
 
 config dnsmasq-gfwlist
