@@ -83,28 +83,36 @@ then
     /etc/init.d/dnsmasq restart
 fi
 
-if [ -e $TEMPFILE ]
+if [ -s $TEMPFILE ]
 then
    rm -f $TEMPFILE
 fi
 ```
 
 /usr/bin/chinadns-chnroute.update
-```bash
+```shell
 #!/bin/sh
 
-TEMPFILE=/tmp/chinadns_chnroute.tmp
-CHNROUTE_TEMPFILE=/etc/chinadns_chnroute.txt.tmp
-wget 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest' -q -O $TEMPFILE
-if [ $? -eq 0 ]; then
-    cat $TEMPFILE|awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' > $CHNROUTE_TEMPFILE
-    if [ -s $CHNROUTE_TEMPFILE ]
+TEMPAPNICFILE=/tmp/apnic.tmp
+CHNROUTEFILE=/etc/chnroute.tmp
+
+wget 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest' -q -O $TEMPAPNICFILE
+if [ $? -eq 0 ]
+then
+    awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' $TEMPAPNICFILE > $CHNROUTEFILE
+    if [ -s $CHNROUTEFILE ]
     then
-        cp $CHNROUTE_TEMPFILE /etc/chinadns_chnroute.txt
-        /etc/init.d/shadowsocks restart
-        rm $CHNROUTE_TEMPFILE
+        ipset flush chnroute
+        for ip in $(cat $CHNROUTEFILE)
+        do
+            ipset add chnroute $ip
+        done
     fi
 fi
-rm $TEMPFILE
+
+if [ -f $TEMPAPNICFILE ]
+then
+   rm -f $TEMPAPNICFILE
+fi
 ```
 
