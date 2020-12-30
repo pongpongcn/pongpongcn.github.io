@@ -70,16 +70,23 @@ Config Scheduled Tasks
 ```
 
 /usr/bin/dnsmasq-gfwlist.update
-```bash
+```shell
 #!/bin/sh
 
 TEMPFILE=/tmp/gfwlist.conf.tmp
+DESTFILE=/etc/dnsmasq-gfwlist-ipset.conf
+
 /usr/bin/gfwlist2dnsmasq.sh -s gfwlist -o $TEMPFILE
-if [ $? -eq 0 ]; then
-    cp $TEMPFILE /etc/dnsmasq.d/gfwlist.conf
+if [ $? -eq 0 ]
+then
+    mv -f $TEMPFILE $DESTFILE
     /etc/init.d/dnsmasq restart
 fi
-rm $TEMPFILE
+
+if [ -e $TEMPFILE ]
+then
+   rm -f $TEMPFILE
+fi
 ```
 
 /usr/bin/chinadns-chnroute.update
