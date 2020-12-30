@@ -79,7 +79,7 @@ DESTFILE=/etc/dnsmasq_gfwlist_ipset.conf
 /usr/bin/gfwlist2dnsmasq.sh -s gfwlist -o $TEMPFILE
 if [ $? -eq 0 ]
 then
-    mv -f $TEMPFILE $DESTFILE
+    cp $TEMPFILE $DESTFILE
     /etc/init.d/dnsmasq restart
 fi
 
@@ -103,7 +103,7 @@ then
     awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' $TEMPAPNICFILE > $TEMPFILE
     if [ $? -eq 0 ]
     then
-        mv -f $TEMPFILE $DESTFILE
+        cp $TEMPFILE $DESTFILE
         ipset flush chnroute
         for ip in $(cat $DESTFILE)
         do
