@@ -65,15 +65,15 @@ Extra arguments `-m set --match-set gfwlist dst`
 
 Config Scheduled Tasks
 ```
-0 5 * * * /usr/bin/dnsmasq-gfwlist.update
-0 6 * * * /usr/bin/chinadns-chnroute.update
+0 5 * * * /usr/bin/update_dnsmasq_gfwlist
+0 6 * * * /usr/bin/update_chnroute
 ```
 
 /usr/bin/update_dnsmasq_gfwlist
 ```shell
 #!/bin/sh
 
-TEMPFILE=/tmp/gfwlist.conf.tmp
+TEMPFILE=$(mktemp -u)
 DESTFILE=/etc/dnsmasq_gfwlist_ipset.conf
 
 /usr/bin/gfwlist2dnsmasq.sh -s gfwlist -o $TEMPFILE
@@ -93,8 +93,8 @@ fi
 ```shell
 #!/bin/sh
 
-TEMPAPNICFILE=/tmp/apnic.tmp
-TEMPFILE=/tmp/chnroute.txt.tmp
+TEMPAPNICFILE=$(mktemp -u)
+TEMPFILE=$(mktemp -u)
 DESTFILE=/etc/chnroute.txt
 
 wget 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest' -q -O $TEMPAPNICFILE
@@ -103,12 +103,12 @@ then
     awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' $TEMPAPNICFILE > $TEMPFILE
     if [ $? -eq 0 ]
     then
-        cp $TEMPFILE $DESTFILE
         ipset flush chnroute
-        for ip in $(cat $DESTFILE)
+        for ip in $(cat $TEMPFILE)
         do
             ipset add chnroute $ip
         done
+        cp $TEMPFILE $DESTFILE
     fi
 fi
 
