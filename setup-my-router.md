@@ -69,7 +69,7 @@ Config Scheduled Tasks
 0 6 * * * /usr/bin/chinadns-chnroute.update
 ```
 
-/usr/bin/dnsmasq-gfwlist.update
+/usr/bin/update_dnsmasq_gfwlist
 ```shell
 #!/bin/sh
 
@@ -89,7 +89,7 @@ then
 fi
 ```
 
-/usr/bin/chinadns-chnroute.update
+/usr/bin/update_chnroute
 ```shell
 #!/bin/sh
 
