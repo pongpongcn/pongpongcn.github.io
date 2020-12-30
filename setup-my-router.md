@@ -74,7 +74,7 @@ Config Scheduled Tasks
 #!/bin/sh
 
 TEMPFILE=/tmp/gfwlist.conf.tmp
-DESTFILE=/etc/dnsmasq-gfwlist-ipset.conf
+DESTFILE=/etc/dnsmasq_gfwlist_ipset.conf
 
 /usr/bin/gfwlist2dnsmasq.sh -s gfwlist -o $TEMPFILE
 if [ $? -eq 0 ]
