@@ -94,16 +94,18 @@ fi
 #!/bin/sh
 
 TEMPAPNICFILE=/tmp/apnic.tmp
-CHNROUTEFILE=/etc/chnroute.tmp
+TEMPFILE=/tmp/chnroute.txt.tmp
+DESTFILE=/etc/chnroute.txt
 
 wget 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest' -q -O $TEMPAPNICFILE
 if [ $? -eq 0 ]
 then
-    awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' $TEMPAPNICFILE > $CHNROUTEFILE
-    if [ -s $CHNROUTEFILE ]
+    awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' $TEMPAPNICFILE > $TEMPFILE
+    if [ $? -eq 0 ]
     then
+        mv -f $TEMPFILE $DESTFILE
         ipset flush chnroute
-        for ip in $(cat $CHNROUTEFILE)
+        for ip in $(cat $DESTFILE)
         do
             ipset add chnroute $ip
         done
@@ -113,6 +115,11 @@ fi
 if [ -f $TEMPAPNICFILE ]
 then
    rm -f $TEMPAPNICFILE
+fi
+
+if [ -f $TEMPFILE ]
+then
+   rm -f $TEMPFILE
 fi
 ```
 
