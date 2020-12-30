@@ -125,6 +125,6 @@ fi
 
 /etc/firewall.user
 ```shell
-iptables -I PREROUTING -t nat -p udp -d 8.8.8.8 --dport 53 -j REDIRECT --to-ports 53
-iptables -I PREROUTING -t nat -p udp -d 8.8.4.4 --dport 53 -j REDIRECT --to-ports 53
+iptables -I PREROUTING -t nat -i eth0 -p udp -d 8.8.8.8 --dport 53 -j REDIRECT --to-ports 53
+iptables -I PREROUTING -t nat -i eth0 -p udp -d 8.8.4.4 --dport 53 -j REDIRECT --to-ports 53
 ```
