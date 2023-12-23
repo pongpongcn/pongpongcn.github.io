@@ -6,6 +6,7 @@ wget https://mirrors.aliyun.com/pub/OpenBSD/OpenSSH/portable/openssh-9.6p1.tar.g
 tar -xf openssh-9.6p1.tar.gz
 cd openssh-9.6p1
 # 应用补丁，Add systemd readiness notification support
+# https://git.launchpad.net/ubuntu/+source/openssh/log/?h=applied/ubuntu/focal-devel
 autoreconf
 ./configure --prefix=/usr --sysconfdir=/etc/ssh --with-ssl-dir=/usr --with-pam --with-systemd
 make
