@@ -1,4 +1,4 @@
-# 在Ubuntu系统上，使用源码编译，更新内置OpenSSH。
+# 在Ubuntu系统上，使用源码编译，更新内置Redis。
 
 ```shell
 apt install libssl-dev libsystemd-dev pkg-config
